@@ -1,0 +1,57 @@
+<div class="w-full max-w-full mx-auto">
+    <section class="parallax-bg h-screen flex flex-col items-center justify-center  text-center p-4">
+      <h1 class="text-5xl font-bold mb-4">Discover the Finest Products</h1>
+      <p class="text-xl mb-6">Shop our collection for exclusive and high-quality items.</p>
+      <button mat-raised-button color="accent" routerLink="/shop" class="px-6 py-3 text-lg">
+        Shop Now
+      </button>
+    </section>
+    <div class="p-8 bg-gray-100">
+      <h2 class="text-3xl font-bold text-center mb-8">Featured Products</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <mat-card *ngFor="let product of featuredProducts" class="rounded-lg shadow-lg overflow-hidden">
+          <img mat-card-image [src]="product.image" [alt]="product.title" class="object-contain p-4 h-48 w-full">
+          <mat-card-content>
+            <h3 class="text-xl font-semibold mt-4">{{ product.title }}</h3>
+            <p class="text-gray-700 mt-2">{{ product.description | slice:0:50 }}...</p>
+            <p class="text-lg font-bold mt-4">{{ product.price | currency }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button class="p-2" (click)="onAddToCart()">
+              <mat-icon class="text-gray-500">shopping_cart</mat-icon>
+          </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+      <div class="parallax-bg-secondary h-80 flex items-center justify-center">
+        <div class="p-8 bg-white flex flex-col items-center text-center w-3/4 rounded-md">
+          <h2 class="text-3xl font-bold mb-4">Join Our Newsletter!</h2>
+          <p>Get discounts and other promotional items when you join our quarterly newsletter.</p>
+          <form [formGroup]="emailForm" (ngSubmit)="onSubmit()" class="w-full max-w-sm space-y-4">
+            <mat-form-field class="w-full">
+              <mat-label class="pr-4">Email</mat-label>
+              <input class="rounded-md" matInput placeholder="Enter your email" formControlName="email">
+              <mat-error *ngIf="emailForm.get('email')?.invalid && emailForm.get('email')?.touched">
+                Please enter a valid email.
+              </mat-error>
+            </mat-form-field>
+            <button mat-raised-button color="primary" type="submit" [disabled]="emailForm.invalid">
+              Join Now
+            </button>
+          </form>
+        </div>
+      </div>
+    <div class="p-8 bg-white">
+      <h2 class="text-3xl font-bold text-center mb-8">Customer Testimonials</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <mat-card *ngFor="let testimonial of testimonials" class="rounded-lg shadow-lg">
+          <mat-card-content>
+            <p class="text-gray-700 italic">"{{ testimonial.message }}"</p>
+            <p class="text-sm text-right mt-4 font-semibold">- {{ testimonial.name }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  

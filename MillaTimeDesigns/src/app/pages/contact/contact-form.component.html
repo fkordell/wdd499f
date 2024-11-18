@@ -1,0 +1,61 @@
+<div class="flex flex-col items-center p-6 space-y-6 max-w-4xl mx-auto">
+    <mat-card class="w-full shadow-lg mb-6">
+      <mat-card-header>
+        <mat-card-title>Get In Touch</mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <mat-list dense>
+          <mat-list-item>
+            <strong>Name:</strong> <span class="ml-2">{{ companyContact?.name }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <strong>Email:</strong> <span class="ml-2">{{ companyContact?.email }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <strong>Phone:</strong> <span class="ml-2">{{ companyContact?.phone }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <strong>Address:</strong> <span class="ml-2">{{ companyContact?.address }}</span>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+    <section class="w-full bg-white p-6 rounded-lg shadow-lg max-w-lg">
+      <h2 class="text-2xl font-bold mb-4">Leave Your Details With Us</h2>
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="space-y-4">
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" placeholder="Your Name">
+          <mat-error *ngIf="name?.invalid && name?.touched">Name is required.</mat-error>
+        </mat-form-field>
+  
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" placeholder="Your Email">
+          <mat-error *ngIf="email?.invalid && email?.touched">Please enter a valid email.</mat-error>
+        </mat-form-field>
+  
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Phone</mat-label>
+          <input matInput formControlName="phone" placeholder="Your Phone">
+        </mat-form-field>
+  
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Subject</mat-label>
+          <input matInput formControlName="subject" placeholder="Subject">
+        </mat-form-field>
+  
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Message</mat-label>
+          <textarea matInput formControlName="message" placeholder="Your Message"></textarea>
+          <mat-error *ngIf="message?.invalid && message?.touched">Message is required.</mat-error>
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary" type="submit" class="w-full" [disabled]="contactForm.invalid">
+          Send Message
+        </button>
+      </form>
+    </section>
+  </div>
+  

@@ -1,0 +1,84 @@
+<div class="flex flex-col md:flex-row bg-gray-100 h-screen">
+    <div class="w-full md:w-1/4 bg-white p-6 border-r">
+      <div class="flex flex-col items-center mb-6">
+        <div class="w-24 h-24 bg-gray-300 rounded-full mb-4 flex items-center justify-center">
+          <mat-icon>person</mat-icon>
+        </div>
+        <h2 class="text-xl font-bold">{{ userProfile?.name }}</h2>
+        <p class="text-gray-500">{{ userProfile?.email }}</p>
+      </div>
+      <ul class="space-y-4">
+        <li class="text-orange-500 font-semibold">Personal information</li>
+        <li class="text-gray-700 hover:text-orange-500 cursor-pointer">
+            <a [routerLink]="['/billing']">Billing & Payments</a>
+        </li>
+        <li class="text-gray-700 hover:text-orange-500 cursor-pointer">
+            <a [routerLink]="['/order-history']">Order History</a>
+        </li>
+        <li class="text-gray-700 hover:text-orange-500 cursor-pointer">
+            <a [routerLink]="['/edit-profile']">Edit Profile</a>
+        </li>
+      </ul>
+    </div>
+    <div class="w-full md:w-3/4 p-6">
+      <h2 class="text-2xl font-bold mb-2">Personal information</h2>
+      <p class="text-gray-500 mb-6">Manage your personal information, including phone numbers and email address where you can be contacted.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <mat-card class="bg-white rounded-lg shadow-md p-4">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-sm font-semibold">Name</p>
+              <p class="text-lg">{{ userProfile?.name || 'Not Provided'}}</p>
+            </div>
+            <mat-icon class="text-orange-500">person</mat-icon>
+          </div>
+        </mat-card>
+        <mat-card class="bg-white rounded-lg shadow-md p-4">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-sm font-semibold">Date of Birth</p>
+              <p class="text-lg">{{ userProfile?.dob || 'Not provided' }}</p>
+            </div>
+            <mat-icon class="text-orange-500">calendar_today</mat-icon>
+          </div>
+        </mat-card>
+        <mat-card class="bg-white rounded-lg shadow-md p-4">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-sm font-semibold">Country/Region</p>
+              <p class="text-lg">{{ userProfile?.location || 'Not provided' }}</p>
+            </div>
+            <mat-icon class="text-orange-500">public</mat-icon>
+          </div>
+        </mat-card>
+        <mat-card class="bg-white rounded-lg shadow-md p-4">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-sm font-semibold">Language</p>
+              <p class="text-lg">English (US) - English</p>
+            </div>
+            <mat-icon class="text-orange-500">language</mat-icon>
+          </div>
+        </mat-card>
+        <mat-card class="bg-white rounded-lg shadow-md p-4">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-sm font-semibold">Email</p>
+              <p class="text-lg">{{ userProfile?.email || 'Not Provided' }}</p>
+            </div>
+            <mat-icon class="text-orange-500">email</mat-icon>
+          </div>
+        </mat-card>
+        <mat-card class="bg-white rounded-lg shadow-md p-4">
+            <div class="flex justify-between items-center">
+              <div>
+                <p class="text-sm font-semibold">Phone</p>
+                <p class="text-lg">{{ userProfile?.phone || 'Not Provided' }}</p>
+              </div>
+              <mat-icon class="text-orange-500">phone</mat-icon>
+            </div>
+          </mat-card>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,13 @@
+.parallax-bg {
+    background-image: url('../../../assets/images/placeholder.jpg') !important;
+    background-attachment: fixed !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+.parallax-bg-secondary {
+    background-image: url('../../../assets/images/texture.jpg') !important;
+    background-attachment: fixed !important;
+    background-size: cover !important;
+    background-position: center !important;
+}

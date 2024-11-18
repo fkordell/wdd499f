@@ -1,0 +1,20 @@
+<mat-expansion-panel *ngIf="categories">
+    <mat-expansion-panel-header>
+        <mat-panel-title>  CATEGORIES </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-selection-list [multiple]="false">
+        <mat-list-option *ngFor="let category of categories" [value]="category">
+            <button (click)="onShowCategory(category)">{{category}}</button>
+        </mat-list-option>
+    </mat-selection-list>
+</mat-expansion-panel>
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        <mat-panel-title> PRICES </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-selection-list [multiple]="false">
+        <mat-list-option *ngFor="let price of prices" [value]="price">
+            <button (click)="onShowPriceRange(price)">{{price.label}}</button>
+        </mat-list-option>
+    </mat-selection-list>
+</mat-expansion-panel>

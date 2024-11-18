@@ -1,0 +1,66 @@
+<div class="max-w-full mx-auto">
+    <mat-toolbar class="border-x border-gray-300 flex justify-between items-center">
+    
+        <div class="flex-shrink-0">
+            <a routerLink="landing">
+                <img src="assets/millatimelogo.png" alt="Millatime Designs Logo" class="h-10 w-auto align-middle">
+            </a>
+        </div>
+    
+        <div class="flex-grow flex justify-center space-x-6">
+            <a routerLink="shop" class="text-gray-700 hover:text-gray-900">Shop</a>
+            <a routerLink="about" class="text-gray-700 hover:text-gray-900">About</a>
+            <a routerLink="contact" class="text-gray-700 hover:text-gray-900">Contact</a>
+        </div>
+    
+        <div class="flex-shrink-0 flex items-center space-x-0">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon
+                    [matBadge]="itemsQuantity"
+                    [matBadgeHidden]="!itemsQuantity"
+                    class="customBadge"
+                >shopping_cart</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <div class="p-3 divide-y divide-solid">
+                    <div class="pb-3 flex justify-between">
+                        <span class="mr-16">{{ itemsQuantity }} Items</span>
+                        <a routerLink="cart">View Cart</a>
+                    </div>
+                    <div *ngIf="cart.items.length" class="py-3">
+                        <div *ngFor="let item of cart.items" class="flex justify-between font-light mb-2">
+                            {{item.name}} x {{item.quantity}}
+                            <span class="font-bold">{{ item.price | currency }}</span>
+                        </div>
+                        <div class="flex justify-between py-3 font-light">
+                            Total:
+                            <span class="font-bold">{{ getTotal(cart.items) | currency }}</span>
+                        </div>
+                        <div class="pt-3 flex justify-between">
+                            <button (click)="onClearCart()" class="bg-rose-600 text-white rounded-full w-9 h-9">
+                                <mat-icon>remove_shopping_cart</mat-icon>
+                            </button>
+                            <button routerLink="cart" class="bg-green-600 text-white rounded-full w-9 h-9">
+                                <mat-icon>shopping_cart</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-menu>
+            
+            <button mat-icon-button [matMenuTriggerFor]="accountMenu">
+                <mat-icon>account_circle</mat-icon>
+            </button>
+            <mat-menu #accountMenu="matMenu">
+                <ng-container *ngIf="isAuthenticated$ | async; else showLogin">
+                    <button mat-menu-item routerLink="account">Account</button>
+                    <button mat-menu-item (click)="onLogout()">Logout</button>
+                </ng-container>
+                <ng-template #showLogin>
+                    <button mat-menu-item (click)="login()">Login</button>
+                </ng-template>
+            </mat-menu>
+        </div>
+    
+    </mat-toolbar>
+</div>

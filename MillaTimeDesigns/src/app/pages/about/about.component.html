@@ -1,0 +1,32 @@
+<div class="flex flex-col items-center p-6 space-y-6 max-w-4xl mx-auto">
+    <mat-card class="w-full shadow-lg">
+        <mat-card-header>
+            <mat-card-title>About {{ companyContact.name }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p>{{ companyContact.description }}</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="w-full shadow-lg">
+        <mat-card-header>
+            <mat-card-title>Get In Touch</mat-card-title>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content>
+            <mat-list>
+                <mat-list-item>
+                    <strong>Name:</strong> <span class="ml-2">{{ companyContact.name }}</span>
+                </mat-list-item>
+                <mat-list-item>
+                    <strong>Email:</strong> <span class="ml-2">{{ companyContact.email }}</span>
+                </mat-list-item>
+                <mat-list-item>
+                    <strong>Phone:</strong> <span class="ml-2">{{ companyContact.phone }}</span>
+                </mat-list-item>
+                <mat-list-item>
+                    <strong>Address:</strong> <span class="ml-2">{{ companyContact.address }}</span>
+                </mat-list-item>
+            </mat-list>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -1,0 +1,11 @@
+<div class="p-6 space-y-4 bg-white rounded-lg shadow-md max-w-lg mx-auto">
+    <h2 class="text-2xl font-semibold">Billing & Payments</h2>
+    <p class="text-gray-600">Manage your payment methods securely.</p>
+
+    <div *ngFor="let card of savedCards" class="p-4 border rounded-md flex justify-between items-center">
+        <span>{{ card.brand }} ending in {{ card.last4 }}</span>
+        <button mat-button color="warn" (click)="removeCard(card.id)">Remove</button>
+    </div>
+
+    <button mat-raised-button color="primary" class="w-full mt-4" (click)="addPaymentMethod()">Add Payment Method</button>
+</div>

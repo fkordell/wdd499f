@@ -1,0 +1,21 @@
+<div class="p-6 space-y-4 bg-white rounded-lg shadow-md max-w-lg mx-auto">
+    <h2 class="text-2xl font-semibold">Edit Profile</h2>
+    <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="space-y-4">
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Address</mat-label>
+            <input matInput formControlName="address">
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" class="w-full mt-4" type="submit">Save Changes</button>
+    </form>
+</div>
