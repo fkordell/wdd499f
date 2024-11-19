@@ -23,19 +23,25 @@ export class AppAuthService {
   get user$() {
     return this.auth.user$;
   }
+  handlePostLogin(): void {
+    this.user$.subscribe(user => {
+      if (user && user.email) {
+        const newUser = {
+          email: user.email,
+          name: user.name || user.nickname || '',
+          authProvider: user.sub?.split('|')[0] || 'local', 
+        };
 
-  createUser(email: string, password: string, name?: string): void {
-    this.http.post('http://localhost:5000/api/users/create', {
-      email,
-      password,
-      name,
-    }).subscribe({
-      next: (response) => {
-        console.log('User successfully created:', response);
-      },
-      error: (error) => {
-        console.error('Error creating user:', error);
-      },
+        this.http.post('http://localhost:5000/api/users/create', newUser)
+          .subscribe({
+            next: (response) => {
+              console.log('User successfully created or exists:', response);
+            },
+            error: (error) => {
+              console.error('Error creating user:', error);
+            },
+          });
+      }
     });
   }
 }

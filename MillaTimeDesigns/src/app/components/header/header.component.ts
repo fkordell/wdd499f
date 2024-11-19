@@ -47,8 +47,12 @@ export class HeaderComponent implements OnInit{
 
   ngOnInit(): void {
     this.isAuthenticated$ = this.authService.isAuthenticated$;
+  
     this.isAuthenticated$.subscribe(isLoggedIn => {
       console.log('User is authenticated:', isLoggedIn);
+      if (isLoggedIn) {
+        this.authService.handlePostLogin();
+      }
     });
   }
 
