@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { Product } from '../../../../models/product.model';
 import { CartService } from '../../../../services/cart.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,13 +9,13 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [MatIconModule, CommonModule],
+  imports: [MatIconModule, CommonModule, MatDialogModule],
   templateUrl: './modal.component.html'
 })
 export class ModalComponent  {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: Product,
-    private dialogRef: MatDialogRef<ModalComponent>,
+    public dialogRef: MatDialogRef<ModalComponent>,
     private cartService: CartService
   ) {}
 

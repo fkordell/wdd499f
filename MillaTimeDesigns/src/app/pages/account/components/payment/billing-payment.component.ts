@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-billing-payment',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './billing-payment.component.html' 
 })
 export class BillingPaymentComponent {
@@ -12,7 +13,7 @@ export class BillingPaymentComponent {
     { id: '2', brand: 'MasterCard', last4: '5678'}
   ]
 
-  addPayment() {
+  addPaymentMethod() {
 
   }
 

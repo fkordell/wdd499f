@@ -8,7 +8,7 @@ import { UserContact } from '../models/user-contact.model';
   providedIn: 'root',
 })
 export class UserContactService {
-  private apiUrl = 'https://your-backend-api.com/contact';
+  private apiUrl = 'http://localhost:5000/api/users';
   
   constructor(private http: HttpClient) {}
 
@@ -23,5 +23,14 @@ export class UserContactService {
   }
   submitUserContactInfo(userContactInfo: UserContact): Observable<any> {
     return this.http.post<any>(this.apiUrl, userContactInfo);
+  }
+
+  getUserProfile(email: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/profile/${email}`).pipe(
+      catchError((err) => {
+        console.error('Error fetching user profile:', err);
+        return of(null); 
+      })
+    );
   }
 }

@@ -9,7 +9,7 @@ import { ModalComponent } from '../modal/modal.component';
 @Component({
   selector: 'app-product-box',
   standalone: true,
-  imports: [MatCardModule, CommonModule, MatIconModule, MatDialogModule, ModalComponent],
+  imports: [MatCardModule, CommonModule, MatIconModule, MatDialogModule],
   templateUrl: './product-box.component.html',
 })
 export class ProductBoxComponent implements OnInit {
@@ -31,8 +31,11 @@ export class ProductBoxComponent implements OnInit {
     console.log('Opening modal with product:', this.product)
     this.dialog.open(ModalComponent, {
       data: this.product, 
-      width: '600px',
-      disableClose: false 
+      width: '90vw', 
+      maxWidth: '900px', 
+      height: 'auto',
+      maxHeight: '90vh', 
+      disableClose: false,
     });
   }
 }
