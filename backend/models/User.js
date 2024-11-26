@@ -10,11 +10,13 @@ const UserSchema = new mongoose.Schema(
       match: /.+\@.+\..+/,
       trim: true,
     },
-    password: { type: String }, 
+    password: { type: String, required: function () {
+      return this.authProvider === 'local'; 
+    } }, 
     name: { type: String, default: '' },
     authProvider: { 
       type: String, 
-      enum: ['local', 'google', 'facebook', 'auth0'], 
+      enum: ['local', 'google-oauth2', 'facebook', 'auth0'], 
       default: 'local' 
     },
   },
@@ -22,19 +24,14 @@ const UserSchema = new mongoose.Schema(
 );
 
 UserSchema.pre('save', async function (next) {
-    if (this.authProvider !== 'local') {
-        return next(); 
-    }
-
-    if (!this.isModified('password')) return next();
-
+  if (this.isModified('password') && this.password) {
     try {
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-        next();
-    } catch (error) {
-        next(error);
+      this.password = await bcrypt.hash(this.password, 10);
+    } catch (err) {
+      return next(err);
     }
+  }
+  next();
 });
 
 module.exports = mongoose.model('User', UserSchema);

@@ -21,8 +21,7 @@ router.get('/profile/:email', async (req, res) => {
 });
 
 router.post(
-  '/create',
-  async (req, res) => {
+  '/create', async (req, res) => {
     console.log('Incoming request data:', req.body);
 
     const { email, name, authProvider = 'local', password } = req.body;
@@ -35,9 +34,9 @@ router.post(
 
       const newUser = new User({
         email,
-        name,
+        name: name || 'Uknown User',
         authProvider,
-        ...(authProvider === 'local' && { password }),
+        ...(authProvider === 'local' && password && { password }),
       });
 
       await newUser.save();

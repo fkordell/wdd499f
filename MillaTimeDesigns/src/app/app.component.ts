@@ -5,6 +5,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CartService } from './services/cart.service';
 import { StoreService } from './services/store.service';
 import { Cart } from './models/cart.model';
+import { AppAuthService } from './services/auth.service';
 
 
 @Component({
@@ -20,11 +21,12 @@ import { Cart } from './models/cart.model';
 export class AppComponent implements OnInit {
   cart: Cart  = { items: [] };
 
-  constructor(private cartService: CartService, private storeService: StoreService) {}
+  constructor(private cartService: CartService, private storeService: StoreService, private authService: AppAuthService) {}
 
   ngOnInit(): void {
     this.cartService.cart.subscribe((_cart) => {
       this.cart = _cart;
-    })
+    });
+    this.authService.handlePostLogin();
   }
 }
