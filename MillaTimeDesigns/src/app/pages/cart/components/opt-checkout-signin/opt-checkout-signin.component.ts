@@ -25,7 +25,7 @@ export class OptCheckoutSigninComponent {
   ) {}
 
   login(): void {
-    this.authService.login(); 
+    this.authService.login('/cart'); 
     this.dialogRef.close(false); 
   }
 
