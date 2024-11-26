@@ -8,8 +8,10 @@ import { AuthService } from '@auth0/auth0-angular';
 export class AppAuthService {
   constructor(private auth: AuthService, private http: HttpClient) {}
 
-  login(): void {
-    this.auth.loginWithRedirect();
+  login(redirectAfterLogin?: string): void {
+    this.auth.loginWithRedirect({
+      appState: { target: redirectAfterLogin || '/landing' },
+    });
   }
 
   logout(): void {
