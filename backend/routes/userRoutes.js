@@ -2,7 +2,11 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const { check, validationResult } = require('express-validator');
 const User = require('../models/User');
+const Stripe = require('stripe');
 
+require('dotenv').config();
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const router = express.Router();
 
 router.get('/profile/:email', async (req, res) => {
@@ -20,8 +24,7 @@ router.get('/profile/:email', async (req, res) => {
   }
 });
 
-router.post(
-  '/create', async (req, res) => {
+router.post('/create', async (req, res) => {
     console.log('Incoming request data:', req.body);
 
     const { email, name, authProvider = 'local', password } = req.body;
@@ -32,10 +35,16 @@ router.post(
         return res.status(200).json({ message: 'User already exists.' });
       }
 
+      const stripeCustomer = await stripe.customers.create({
+        email,
+        name: name || 'Unkown User',
+      });
+
       const newUser = new User({
         email,
         name: name || 'Uknown User',
         authProvider,
+        stripeCustomerId: stripeCustomer.id,
         ...(authProvider === 'local' && password && { password }),
       });
 

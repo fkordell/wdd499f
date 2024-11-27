@@ -1,6 +1,16 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+const PaymentMethodSchema = new mongoose.Schema(
+  {
+    id: { type: String, required: true }, 
+    brand: { type: String, required: true }, 
+    last4: { type: String, required: true },
+    created_at: { type: Date, default: Date.now }, 
+  },
+  { _id: false }
+);
+
 const UserSchema = new mongoose.Schema(
   {
     email: { 
@@ -19,6 +29,8 @@ const UserSchema = new mongoose.Schema(
       enum: ['local', 'google-oauth2', 'facebook', 'auth0'], 
       default: 'local' 
     },
+    stripeCustomerId: { type: String, default: null},
+    paymentMethods: { type: [PaymentMethodSchema], default: [] },
   },
   { timestamps: true }
 );

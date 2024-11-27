@@ -5,6 +5,9 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Router } from '@angular/router';
 import { CartService } from './cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root',
@@ -62,6 +65,45 @@ export class AppAuthService {
         });
       }
     });
+  }
+  addPaymentMethod(paymentMethodId: string) {
+    return this.user$.pipe(
+      switchMap((user) => {
+        if (user && user.email) {
+          return this.http.post('http://localhost:5000/api/stripe/add-payment-method', {
+            userEmail: user.email,
+            paymentMethodId,
+          });
+        }
+        throw new Error('User not authenticated');
+      })
+    );
+  }
+
+  fetchPaymentMethods() {
+    return this.user$.pipe(
+      switchMap((user) => {
+        if (user && user.email) {
+          return this.http.get(`http://localhost:5000/api/stripe/payment-methods/${user.email}`);
+        }
+        return of([]); 
+      })
+    );
+  }
+  removePaymentMethod(paymentMethodId: string) {
+    return this.user$.pipe(
+      switchMap((user) => {
+        if (user && user.email) {
+          return this.http.delete('http://localhost:5000/api/stripe/remove-payment-method', {
+            body: {
+              userEmail: user.email,
+              paymentMethodId,
+            },
+          });
+        }
+        throw new Error('User not authenticated');
+      })
+    );
   }
 }
 
