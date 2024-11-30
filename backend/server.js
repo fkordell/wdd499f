@@ -7,11 +7,14 @@ const userRoutes = require('./routes/userRoutes');
 const stripeRoutes = require('./routes/stripeRoutes');
 
 const app = express();
+
 app.use(cors({
   origin: 'http://localhost:4200', 
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization'
 }));
+app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
+
 app.use(bodyParser.json());
 
 mongoose

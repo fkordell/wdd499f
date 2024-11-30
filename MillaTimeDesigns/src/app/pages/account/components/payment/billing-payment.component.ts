@@ -69,11 +69,16 @@ export class BillingPaymentComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error removing payment method:', error);
-        this.snackBar.open('Failed to remove payment method. Please try again.', 'Close', {
-          duration: 3000,
-        });
+        let errorMessage = 'Failed to remove payment method. Please try again.';
+        if (error.status === 400) {
+          errorMessage = 'Invalid payment method or it is not attached to the customer.';
+        } else if (error.status === 404) {
+          errorMessage = 'User or payment method not found.';
+        }
+        this.snackBar.open(errorMessage, 'Close', { duration: 3000 });
       },
     });
   }
+  
 }
 

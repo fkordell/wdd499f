@@ -74,16 +74,22 @@ export class CartComponent implements OnInit {
       });
     }
     private proceedToStripe(): void {
-      this.http.post('http://localhost:5000/api/stripe/create-checkout-session', {
-        items: this.cart.items,
-      }).subscribe({
-        next: async (res: any) => {
-          const stripe = await loadStripe('pk_test_51QNeEV09UI8uypIvvz0vr0k6FQ1r7qszfcSWWjh42QZALzNE40pT5HaU7qpYM4d3HhqYAIvMEbIDhhPgcOtYQiEX00spRc7Pvt');
-          stripe?.redirectToCheckout({ sessionId: res.id });
-        },
-        error: (error) => {
-          console.error('Checkout failed:', error);
-        },
+      this.authService.user$.subscribe((user) => {
+        const email = user?.email; 
+        console.log('Sending email to Stripe:', email);
+        this.http.post('http://localhost:5000/api/stripe/create-checkout-session', {
+          items: this.cart.items,
+          userEmail: email, 
+        }).subscribe({
+          next: async (res: any) => {
+            console.log('Received Stripe session response:', res);
+            const stripe = await loadStripe('pk_test_51QNeEV09UI8uypIvvz0vr0k6FQ1r7qszfcSWWjh42QZALzNE40pT5HaU7qpYM4d3HhqYAIvMEbIDhhPgcOtYQiEX00spRc7Pvt');
+            stripe?.redirectToCheckout({ sessionId: res.id });
+          },
+          error: (error) => {
+            console.error('Checkout failed:', error);
+          },
+        });
       });
     }
 }
