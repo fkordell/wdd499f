@@ -1,16 +1,24 @@
-<div *ngIf="isLoading" class="text-center">
-    <p>Loading payment methods...</p>
+<div class="p-6 max-w-6l  mx-auto">
+  <div class="mb-6">
+    <button mat-icon-button [routerLink]="['/account']" aria-label="Back to Account">
+      <span class="flex items-center text-lg font-medium transition-all duration-200 hover:text-xl">
+        <mat-icon>arrow_back</mat-icon>
+        <span class="ml-2">Back</span>
+      </span>
+    </button>
   </div>
-  
+  <div *ngIf="isLoading" class="text-center">
+      <p>Loading payment methods...</p>
+  </div>
   <div *ngIf="!isLoading && savedCards.length === 0" class="text-center">
     <p>No payment methods saved.</p>
   </div>
-  
   <div *ngIf="!isLoading && savedCards.length > 0">
     <h2 class="text-2xl font-semibold">Saved Payment Methods</h2>
-    <div *ngFor="let card of savedCards" class="p-4 border rounded-md flex justify-between items-center">
+     <div *ngFor="let card of savedCards" class="p-4 border rounded-md flex justify-between items-center">
       <span>{{ card.brand }} ending in {{ card.last4 }}</span>
       <button mat-button color="warn" (click)="removeCard(card.id)">Remove</button>
     </div>
   </div>
+</div>
   

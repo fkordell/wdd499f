@@ -1,13 +1,15 @@
 const express = require('express');
 const Stripe = require('stripe');
-const bodyParser = require('body-parser')
-const User = require('../models/User')
+const bodyParser = require('body-parser');
+const User = require('../models/User');
+const axios = require('axios');
 
 require('dotenv').config();
 
 const router = express.Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// Create Checkout Session
 router.post('/create-checkout-session', async (req, res, next) => {
     try {
         const user = await User.findOne({ email: req.body.userEmail });
@@ -73,10 +75,10 @@ router.post('/create-checkout-session', async (req, res, next) => {
             })),
             mode: 'payment',
             payment_intent_data: {
-                setup_future_usage: 'off_session', 
-              },
+                setup_future_usage: 'off_session',
+            },
             metadata: {
-                email: req.body.userEmail, 
+                email: req.body.userEmail,
             },
             success_url: 'http://localhost:4200/cart',
             cancel_url: 'http://localhost:4200/cart',
@@ -88,14 +90,16 @@ router.post('/create-checkout-session', async (req, res, next) => {
     }
 });
 
-router.post('/add-payment-method', async (req, res , next)  => {
-    try { 
+// Add Payment Method
+router.post('/add-payment-method', async (req, res, next) => {
+    try {
         const { userEmail, paymentMethodId } = req.body;
 
         const user = await User.findOne({ email: userEmail });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
+
         const paymentMethod = await stripe.paymentMethods.retrieve(paymentMethodId);
         if (paymentMethod.customer && paymentMethod.customer !== user.stripeCustomerId) {
             console.log('Payment method is already attached to a different customer. Skipping attach.');
@@ -103,6 +107,7 @@ router.post('/add-payment-method', async (req, res , next)  => {
             console.log('Attaching payment method to customer:', user.stripeCustomerId);
             await stripe.paymentMethods.attach(paymentMethodId, { customer: user.stripeCustomerId });
         }
+
         user.paymentMethods = user.paymentMethods || [];
         user.paymentMethods.push({
             id: paymentMethodId,
@@ -111,10 +116,11 @@ router.post('/add-payment-method', async (req, res , next)  => {
             exp_month: paymentMethod.card.exp_month,
             exp_year: paymentMethod.card.exp_year,
         });
+
         await user.save();
-        res.status(200).json({message: 'Payment method added successfully', paymentMethod });
+        res.status(200).json({ message: 'Payment method added successfully', paymentMethod });
     } catch (error) {
-        console.error('Error adding payment methohd:', error);
+        console.error('Error adding payment method:', error);
         next(error);
     }
 });
@@ -149,65 +155,82 @@ router.delete('/remove-payment-method', async (req, res, next) => {
     }
 });
 
+// Webhook for Payment Events
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-    console.log('=== Webhook Test ===');
-    console.log('Webhook received - Raw Body Type:', typeof req.body);
-    console.log('Webhook received - Raw Body as String:', req.body.toString());
-    console.log('Stripe signature header:', req.headers['stripe-signature']);
     const sig = req.headers['stripe-signature'];
     let event;
+
     try {
-        console.log('Attempting to verify the signature...');
         event = stripe.webhooks.constructEvent(
             req.body,
             sig,
             process.env.STRIPE_WEBHOOK_SECRET
         );
-        console.log('Webhook verified successfully!');
-        console.log('Event type:', event.type);
+        console.log('Webhook verified successfully! Event type:', event.type);
     } catch (err) {
         console.error('Webhook signature verification failed:', err.message);
         return res.status(400).send(`Webhook Error: ${err.message}`);
     }
+
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object;
+
         try {
             const userEmail = session.metadata?.email;
             if (!userEmail) {
                 console.error('User email not found in metadata.');
                 return res.status(400).json({ message: 'User email not found in session metadata.' });
             }
+
             const user = await User.findOne({ email: userEmail });
             if (!user) {
                 console.error('User not found:', userEmail);
                 return res.status(404).json({ message: 'User not found.' });
             }
+
+            const lineItemsResponse = await stripe.checkout.sessions.listLineItems(session.id);
+            const stripeItems = lineItemsResponse.data;
+
+            const items = stripeItems.map((lineItem) => ({
+                id: lineItem.id,
+                name: lineItem.description,
+                product: lineItem.price.product,
+                price: lineItem.amount_total / 100,
+                quantity: lineItem.quantity,
+            }));
+
+            const total = session.amount_total / 100;
+            const date = new Date();
+
+            user.purchaseHistory = user.purchaseHistory || [];
+            user.purchaseHistory.push({ items, total, date });
+
             const paymentIntent = await stripe.paymentIntents.retrieve(session.payment_intent);
             const paymentMethodId = paymentIntent.payment_method;
             const paymentMethod = await stripe.paymentMethods.retrieve(paymentMethodId);
-            console.log('Retrieved payment method:', paymentMethod);
-            if (paymentMethod.customer && paymentMethod.customer !== user.stripeCustomerId) {
-                console.log('Payment method is already attached to a different customer. Skipping attach.');
-            } else if (!paymentMethod.customer) {
-                console.log('Attaching payment method to customer:', user.stripeCustomerId);
-                await stripe.paymentMethods.attach(paymentMethodId, { customer: user.stripeCustomerId });
+
+            if (paymentMethod && paymentMethod.card) {
+                user.paymentMethods = user.paymentMethods || [];
+                user.paymentMethods.push({
+                    id: paymentMethod.id,
+                    brand: paymentMethod.card.brand,
+                    last4: paymentMethod.card.last4,
+                    exp_month: paymentMethod.card.exp_month,
+                    exp_year: paymentMethod.card.exp_year,
+                });
+                console.log('Payment method added to user:', paymentMethod.id);
             }
-            user.paymentMethods = user.paymentMethods || [];
-            user.paymentMethods.push({
-                id: paymentMethod.id,
-                brand: paymentMethod.card.brand,
-                last4: paymentMethod.card.last4,
-                exp_month: paymentMethod.card.exp_month,
-                exp_year: paymentMethod.card.exp_year,
-            });
+
+            // Clear the cart
+            user.cart = [];
             await user.save();
-            console.log('Payment method saved successfully for user.');
+            console.log('Purchase history updated and cart cleared successfully.');
         } catch (error) {
             console.error('Error processing checkout.session.completed:', error.message);
         }
     }
+
     res.status(200).json({ received: true });
-    console.log('Webhook processing complete.');
 });
 
 module.exports = router;

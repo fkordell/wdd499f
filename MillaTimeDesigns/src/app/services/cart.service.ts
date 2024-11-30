@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Cart, CartItem } from '../models/cart.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpClient } from '@angular/common/http';
+
 
 
 @Injectable({
@@ -11,7 +13,7 @@ export class CartService {
   private cartKey = 'cart';
   cart = new BehaviorSubject<Cart>(this.loadCart());
 
-  constructor(private _snackBar: MatSnackBar) { }
+  constructor(private _snackBar: MatSnackBar,  private http: HttpClient) { }
 
   private saveCart(): void {
     localStorage.setItem(this.cartKey, JSON.stringify(this.cart.value));
@@ -59,6 +61,25 @@ export class CartService {
     this._snackBar.open('1 item removed from cart', 'Ok', { duration: 3000 })
   }
 
+  savePurchaseHistory(userId: string): void {
+    const purchase = {
+      userId,
+      items: this.cart.value.items,
+      total: this.getTotal(this.cart.value.items),
+      date: new Date().toISOString(),
+    };
+
+    this.http.post('/api/purchase-history', purchase).subscribe({
+      next: () => {
+        this.clearCart();
+        this._snackBar.open('Purchase completed and history saved!', 'Ok', { duration: 3000 });
+      },
+      error: () => {
+        this._snackBar.open('Failed to save your purchase history.', 'Retry', { duration: 3000 });
+      }
+    })
+  }
+
   getTotal(items: Array<CartItem>): number {
     return items.map((item) => item.price * item.quantity)
     .reduce((prev, current) => prev + current, 0)
@@ -83,4 +104,6 @@ export class CartService {
 
   return filteredItems;
   }
+
+
 }

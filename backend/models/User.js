@@ -11,6 +11,31 @@ const PaymentMethodSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const CartItemSchema = new mongoose.Schema(
+  {
+    product: { type: String, required: true },
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    quantity: { type: Number, required: true },
+    id: { type:  Number,  required: true },
+  },
+  { _id: false }
+);
+
+const PurchaseItemSchema = new mongoose.Schema({
+  id: { type: String, required: true }, 
+  name: { type: String, required: true },
+  product: { type: String, required: true },
+  price: { type: Number, required: true },
+  quantity: { type: Number, required: true },
+});
+
+const PurchaseHistorySchema = new mongoose.Schema({
+  items: [PurchaseItemSchema],
+  total: { type: Number, required: true },
+  date: { type: Date, default: Date.now },
+});
+
 const UserSchema = new mongoose.Schema(
   {
     email: { 
@@ -31,6 +56,8 @@ const UserSchema = new mongoose.Schema(
     },
     stripeCustomerId: { type: String, default: null},
     paymentMethods: { type: [PaymentMethodSchema], default: [] },
+    cart : {type: [CartItemSchema], default: [] },
+    purchaseHistory: { type: [PurchaseHistorySchema], default: []  },
   },
   { timestamps: true }
 );

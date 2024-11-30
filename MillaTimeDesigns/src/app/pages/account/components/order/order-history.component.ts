@@ -1,21 +1,47 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { AppAuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-order-history',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatIconModule],
-  templateUrl: './order-history.component.html', 
+  templateUrl: './order-history.component.html',
+  imports: [MatIconModule, RouterModule, CommonModule],
 })
-export class OrderHistoryComponent {
-  orders = [
-    { id: '001', date: new Date(), total: 49.99 },
-    { id: '002',  date: new Date(), total: 89.99 },
-  ];
+export class OrderHistoryComponent implements OnInit {
+  orders: any[] = [];
+  loading = true;
 
-  viewOrder(orderId: string) {
-    // Navigate to detailed order page or show a modal with order details
+  constructor(private http: HttpClient, private authService:AppAuthService) {}
+
+  ngOnInit(): void {
+    this.fetchOrderHistory();
+  }
+  fetchOrderHistory(): void {
+    this.authService.user$.subscribe((user) => {
+      if (user && user.email) {
+        const email = user.email;
+        this.http.get<any>(`http://localhost:5000/api/orders/${email}`).subscribe({
+          next: (response) => {
+            this.orders = response.purchaseHistory || [];
+            this.loading = false;
+          },
+          error: (error) => {
+            console.error('Error fetching order history:', error);
+            this.loading = false;
+          },
+        });
+      } else {
+        console.error('User not authenticated. Unable to fetch order history.');
+        this.loading = false;
+      }
+    });
+  }
+
+  viewOrder(orderId: string): void {
+    console.log(`View details for order ID: ${orderId}`);
   }
 }

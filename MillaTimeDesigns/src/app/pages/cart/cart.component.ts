@@ -5,12 +5,13 @@ import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { CartService } from '../../services/cart.service';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { loadStripe } from '@stripe/stripe-js';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { OptCheckoutSigninComponent } from './components/opt-checkout-signin/opt-checkout-signin.component';
 import { AppAuthService } from '../../services/auth.service';
+
 
 @Component({
   selector: 'app-cart',
@@ -36,7 +37,7 @@ export class CartComponent implements OnInit {
       'action',
     ];
  
-    constructor(private cartService: CartService, private http: HttpClient, private authService: AppAuthService, private dialog: MatDialog) {}
+    constructor(private cartService: CartService, private http: HttpClient, private authService: AppAuthService, private dialog: MatDialog, private router: Router) {}
 
     ngOnInit(): void {
       this.cartService.cart.subscribe((_cart: Cart) => {
@@ -85,11 +86,18 @@ export class CartComponent implements OnInit {
             console.log('Received Stripe session response:', res);
             const stripe = await loadStripe('pk_test_51QNeEV09UI8uypIvvz0vr0k6FQ1r7qszfcSWWjh42QZALzNE40pT5HaU7qpYM4d3HhqYAIvMEbIDhhPgcOtYQiEX00spRc7Pvt');
             stripe?.redirectToCheckout({ sessionId: res.id });
+            localStorage.removeItem('cart');
+            this.cartService.clearCart();
           },
           error: (error) => {
             console.error('Checkout failed:', error);
           },
         });
       });
+    }
+
+    onPurchaseSuccess(userId: string) {
+      this.cartService.savePurchaseHistory(userId);
+      this.router.navigate(['/cart'])
     }
 }
