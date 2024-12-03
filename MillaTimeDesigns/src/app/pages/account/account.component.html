@@ -36,17 +36,21 @@
         <mat-card class="bg-white rounded-lg shadow-md p-4">
           <div class="flex justify-between items-center">
             <div>
-              <p class="text-sm font-semibold">Date of Birth</p>
-              <p class="text-lg">{{ userProfile?.dob || 'Not provided' }}</p>
+              <p class="text-sm font-semibold">Address</p>
+              <p class="text-lg">
+                {{ userProfile?.address?.line1 || 'Not Provided' }},
+                {{ userProfile?.address?.city || '' }},
+                {{ userProfile?.address?.state || '' }},
+              </p>
             </div>
-            <mat-icon class="text-orange-500">calendar_today</mat-icon>
+            <mat-icon class="text-orange-500">place</mat-icon>
           </div>
         </mat-card>
         <mat-card class="bg-white rounded-lg shadow-md p-4">
           <div class="flex justify-between items-center">
             <div>
               <p class="text-sm font-semibold">Country/Region</p>
-              <p class="text-lg">{{ userProfile?.location || 'Not provided' }}</p>
+              <p class="text-lg">{{ userProfile?.country || 'Not provided' }}</p>
             </div>
             <mat-icon class="text-orange-500">public</mat-icon>
           </div>

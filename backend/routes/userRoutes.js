@@ -10,17 +10,26 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const router = express.Router();
 
 router.get('/profile/:email', async (req, res) => {
-  const { email } = req.params;
-  console.log('Fetching profile for email:', email);
   try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    res.status(200).json(user);
+      const user = await User.findOne({ email: req.params.email });
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      const formattedAddress = user.address
+            ? `${user.address.line1 || ''}, ${user.address.city || ''}, ${user.address.state || ''}, ${user.address.country || ''}`
+            : null;
+            
+      res.status(200).json({
+          name: user.name || null,
+          email: user.email,
+          address: user.address || null,
+          country: user.country || null,
+          phone: user.phone || null,
+      });
   } catch (error) {
-    console.error('Error fetching user profile:', error);
-    res.status(500).json({ message: 'Error fetching user profile' });
+      console.error('Error fetching user profile:', error.message);
+      res.status(500).json({ message: 'Error fetching user profile' });
   }
 });
 

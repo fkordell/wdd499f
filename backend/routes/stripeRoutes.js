@@ -32,6 +32,9 @@ router.post('/create-checkout-session', async (req, res, next) => {
             shipping_address_collection: {
                 allowed_countries: ['US', 'CA'],
             },
+            phone_number_collection: {
+                enabled: true,
+            },
             shipping_options: [
                 {
                     shipping_rate_data: {
@@ -187,6 +190,11 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                 console.error('User not found:', userEmail);
                 return res.status(404).json({ message: 'User not found.' });
             }
+
+            user.name = session.customer_details?.name || user.name;
+            user.address = session.customer_details?.address || user.address;
+            user.phone = session.customer_details?.phone || user.phone;
+            user.country = session.customer_details?.address?.country || user.country;
 
             const lineItemsResponse = await stripe.checkout.sessions.listLineItems(session.id);
             const stripeItems = lineItemsResponse.data;

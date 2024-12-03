@@ -49,6 +49,9 @@ const UserSchema = new mongoose.Schema(
       return this.authProvider === 'local'; 
     } }, 
     name: { type: String, default: '' },
+    address: { type: Object },
+    country: {type: String },
+    phone: { type: String },
     authProvider: { 
       type: String, 
       enum: ['local', 'google-oauth2', 'facebook', 'auth0'], 
