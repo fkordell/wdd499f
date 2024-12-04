@@ -9,6 +9,7 @@ import { UserContact } from '../models/user-contact.model';
 })
 export class UserContactService {
   private apiUrl = 'http://localhost:5000/api/users';
+  private queriesApiUrl = 'http://localhost:5000/api/queries'
   
   constructor(private http: HttpClient) {}
 
@@ -33,8 +34,17 @@ export class UserContactService {
       })
     );
   }
-
   updateUserProfile(profileData: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/update`, profileData)
   }
+
+  submitQuery(queryData: any): Observable<any> {
+    return this.http.post(`${this.queriesApiUrl}/submit`, queryData).pipe(
+      catchError((err) => {
+        console.error('Error submitting query:', err);
+        return of(null); 
+      })
+    );
+  }
 }
+

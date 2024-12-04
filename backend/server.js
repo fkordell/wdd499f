@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const userRoutes = require('./routes/userRoutes');
 const stripeRoutes = require('./routes/stripeRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const queriesRoutes = require('./routes/queriesRoutes');
 
 const app = express();
 
@@ -25,6 +26,7 @@ mongoose
 
 app.use('/api/users', userRoutes);
 app.use('/api/stripe', stripeRoutes);
-app.use('/api/orders', orderRoutes)
+app.use('/api/orders', orderRoutes);
+app.use('/api/queries', queriesRoutes);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

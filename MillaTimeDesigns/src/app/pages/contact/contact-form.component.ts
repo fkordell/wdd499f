@@ -104,20 +104,20 @@ export class ContactFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.contactForm.valid) {
-      const userContactInfo: UserContact = this.contactForm.value;
-      this.userContactService.submitUserContactInfo(userContactInfo).subscribe(
-        (response) => {
-          console.log('Form Submitted:', response);
+      const queryData = this.contactForm.value;
+      this.userContactService.submitQuery(queryData).subscribe({
+        next: () => {
+          this.snackBar.open('Query submitted successfully!', 'Close', { duration: 3000 });
           this.contactForm.reset();
-          alert('Thank you for contacting us!');
         },
-        (error) => {
-          console.error('Submission error:', error);
-          alert('There was an error submitting your message. Please try again later.');
-        }
-      );
+        error: (err) => {
+          console.error('Error submitting query:', err);
+          this.snackBar.open('Failed to submit query. Please try again later.', 'Close', { duration: 3000 });
+        },
+      });
     } else {
-      alert('Please fill out all required fields.');
+      this.snackBar.open('Please fill out all required fields.', 'Close', { duration: 3000 });
     }
   }
+  
 }
