@@ -12,6 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
+import { AppAuthService } from '../../services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-contact-form',
@@ -35,19 +37,49 @@ export class ContactFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userContactService: UserContactService,
-    private companyContactService: CompanyContactService
+    private companyContactService: CompanyContactService,
+    private authService: AppAuthService,
+    private snackBar: MatSnackBar
   ) {
     this.contactForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      phone: [''],
-      subject: [''],
+      phone: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(
+            /^(\+?\d{1,4}[\s-])?(\(?\d{3}\)?[\s-]?)?[\d\s-]{7,10}$/ 
+          ),
+        ],
+      ],
+      subject: ['', [Validators.required]],
       message: ['', Validators.required],
     });
   }
 
   ngOnInit(): void {
     this.companyContact = this.companyContactService.getCompanyContact();
+
+    this.authService.user$.subscribe((user) => {
+      if (user?.email) {
+        this.userContactService.getUserProfile(user.email).subscribe({
+          next: (profile: any) => {
+            if (profile) {
+              this.contactForm.patchValue({
+                name: profile.name || '',
+                email: profile.email || '',
+                phone: profile.phone || '',
+              });
+            }
+          },
+          error: (err) => {
+            console.error('Error fetching user profile:', err);
+            this.snackBar.open('Failed to fetch profile data.', 'Close', { duration: 3000 });
+          },
+        });
+      }
+    });
   }
 
   get name() {
