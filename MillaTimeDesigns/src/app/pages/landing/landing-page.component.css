@@ -1,21 +1,21 @@
 .parallax-bg {
-    position: relative;
-    height: 100vh;
-    overflow: hidden;
+    position: relative !important;
+    height: 82vh !important;
+    overflow: hidden !important;
 }
 .parallax-bg video {
-    position: fixed; 
-    top: 0;
-    left: 0;
-    min-width: 100%;
-    min-height: 100%;
-    object-fit: cover; 
-    z-index: -1; 
+    position: fixed !important; 
+    top: 0 !important;
+    left: 0 !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    object-fit: cover !important; 
+    z-index: -1 !important; 
 }
   
 .parallax-bg .relative {
-    z-index: 1; 
-    color: white; 
+    z-index: 1 !important; 
+    color: white !important; 
 }
 
 .parallax-bg-secondary {
@@ -25,8 +25,8 @@
     background-position: center !important;
 }
 
-h1 {
+/* h1 {
     font-family: 'Bebas Neue', 'Roboto', sans-serif; 
     font-size: 4rem; 
     font-weight: 400; 
-  }
+  } */
