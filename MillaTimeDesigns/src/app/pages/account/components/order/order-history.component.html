@@ -24,7 +24,7 @@
         <span>{{ order.date | date }}</span>
       </div>
       <p>Total: {{ order.total | currency }}</p>
-      <button mat-button color="primary" (click)="viewOrder(order._id)">View Details</button>
+      <button mat-button color="primary" (click)="viewOrder(order)">View Details</button>
     </div>
   </div>
   

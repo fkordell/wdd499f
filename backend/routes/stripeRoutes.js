@@ -70,7 +70,7 @@ router.post('/create-checkout-session', async (req, res, next) => {
                     currency: 'usd',
                     product_data: {
                         name: item.name,
-                        images: [item.product],
+                        images: [item.image],
                     },
                     unit_amount: item.price * 100,
                 },
@@ -82,6 +82,7 @@ router.post('/create-checkout-session', async (req, res, next) => {
             },
             metadata: {
                 email: req.body.userEmail,
+                items: JSON.stringify(req.body.items.map(({ name, image }) => ({ name, image }))),
             },
             success_url: 'http://localhost:4200/cart',
             cancel_url: 'http://localhost:4200/cart',
@@ -205,6 +206,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                 product: lineItem.price.product,
                 price: lineItem.amount_total / 100,
                 quantity: lineItem.quantity,
+                image: lineItem.metadata?.image || 'https://via.placeholder.com/150',
             }));
 
             const total = session.amount_total / 100;

@@ -18,6 +18,7 @@ const CartItemSchema = new mongoose.Schema(
     price: { type: Number, required: true },
     quantity: { type: Number, required: true },
     id: { type:  Number,  required: true },
+    image: { type: String, required: true },
   },
   { _id: false }
 );
@@ -28,6 +29,7 @@ const PurchaseItemSchema = new mongoose.Schema({
   product: { type: String, required: true },
   price: { type: Number, required: true },
   quantity: { type: Number, required: true },
+  image: { type: String, required: true, default: 'https://via.placeholder.com/150' },
 });
 
 const PurchaseHistorySchema = new mongoose.Schema({

@@ -4,18 +4,20 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AppAuthService } from '../../../../services/auth.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { OrderDetailsComponent } from './components/order-details.component';
 
 @Component({
   selector: 'app-order-history',
   standalone: true,
   templateUrl: './order-history.component.html',
-  imports: [MatIconModule, RouterModule, CommonModule],
+  imports: [MatIconModule, RouterModule, CommonModule, MatDialogModule],
 })
 export class OrderHistoryComponent implements OnInit {
   orders: any[] = [];
   loading = true;
 
-  constructor(private http: HttpClient, private authService:AppAuthService) {}
+  constructor(private http: HttpClient, private authService:AppAuthService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.fetchOrderHistory();
@@ -41,7 +43,10 @@ export class OrderHistoryComponent implements OnInit {
     });
   }
 
-  viewOrder(orderId: string): void {
-    console.log(`View details for order ID: ${orderId}`);
+  viewOrder(order: any): void {
+    this.dialog.open(OrderDetailsComponent, {
+      width: '500px',
+      data: order,
+    });
   }
 }
