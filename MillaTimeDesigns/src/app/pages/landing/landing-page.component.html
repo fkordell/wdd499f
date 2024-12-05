@@ -1,14 +1,25 @@
 <div class="w-full max-w-full mx-auto">
-    <section class="parallax-bg h-screen flex flex-col items-center justify-center  text-center p-4">
-      <h1 class="text-5xl font-bold mb-4">Discover the Finest Products</h1>
-      <p class="text-xl mb-6">Shop our collection for exclusive and high-quality items.</p>
-      <button mat-raised-button color="accent" routerLink="/shop" class="px-6 py-3 text-lg">
+  <section class="parallax-bg relative h-screen flex flex-col items-center justify-center text-center p-4 overflow-hidden">
+    <video autoplay muted loop playsinline class="absolute top-0 left-0 w-full h-full object-cover z-[-1]">
+      <source src="../../../assets/videos/background.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+    <div class="relative z-[1]">
+      <h1 class="text-7xl font-bold text-white">Discover the Finest Products</h1>
+      <p class="text-xl mb-6 text-white">Shop our collection for exclusive and high-quality items.</p>
+      <button mat-raised-button color="accent" routerLink="/shop" class="px-8 py-4 text-lg">
         Shop Now
       </button>
-    </section>
+    </div>
+  </section>
     <div class="p-8 bg-gray-100">
       <h2 class="text-3xl font-bold text-center mb-8">Featured Products</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div 
+        [ngClass]="{
+          'grid grid-cols-1 gap-8': true,
+          'md:grid-cols-2': gridCols === 4,
+          'lg:grid-cols-3': gridCols === 3
+        }">
         <mat-card *ngFor="let product of featuredProducts" class="rounded-lg shadow-lg overflow-hidden">
           <img mat-card-image [src]="product.image" [alt]="product.title" class="object-contain p-4 h-48 w-full">
           <mat-card-content>
@@ -17,7 +28,7 @@
             <p class="text-lg font-bold mt-4">{{ product.price | currency }}</p>
           </mat-card-content>
           <mat-card-actions>
-            <button class="p-2" (click)="onAddToCart()">
+            <button class="p-2" (click)="onAddToCart(product)">
               <mat-icon class="text-gray-500">shopping_cart</mat-icon>
           </button>
           </mat-card-actions>
@@ -42,7 +53,7 @@
           </form>
         </div>
       </div>
-    <div class="p-8 bg-white">
+    <!-- <div class="p-8 bg-white">
       <h2 class="text-3xl font-bold text-center mb-8">Customer Testimonials</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <mat-card *ngFor="let testimonial of testimonials" class="rounded-lg shadow-lg">
@@ -52,6 +63,6 @@
           </mat-card-content>
         </mat-card>
       </div>
-    </div>
+    </div> -->
   </div>
   

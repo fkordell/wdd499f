@@ -1,4 +1,4 @@
-<div class="max-w-full mx-auto">
+<div class="max-w-full mx-auto sticky top-0 z-50 bg-white shadow-md">
     <mat-toolbar class="border-x border-gray-300 flex justify-between items-center">
     
         <div class="flex-shrink-0">
@@ -37,10 +37,10 @@
                             <span class="font-bold">{{ getTotal(cart.items) | currency }}</span>
                         </div>
                         <div class="pt-3 flex justify-between">
-                            <button (click)="onClearCart()" class="bg-rose-600 text-white rounded-full w-9 h-9">
+                            <button (click)="onClearCart()" class="bg-rose-600 text-white rounded-full w-10 max-h-10">
                                 <mat-icon>remove_shopping_cart</mat-icon>
                             </button>
-                            <button routerLink="cart" class="bg-green-600 text-white rounded-full w-9 h-9">
+                            <button routerLink="cart" class="bg-green-600 text-white rounded-full w-10 h-10">
                                 <mat-icon>shopping_cart</mat-icon>
                             </button>
                         </div>
