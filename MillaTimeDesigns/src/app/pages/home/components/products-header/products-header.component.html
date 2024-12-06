@@ -1,14 +1,44 @@
 <mat-card class="mb-4">
-    <div class="flex justify-between">
-        <div>
-            <button mat-button [matMenuTriggerFor]="sortByMenu">
-                Sort by {{sort}}
-                <mat-icon>expand_more</mat-icon>
-            </button>
-            <mat-menu #sortByMenu="matMenu">
-                <button (click)="onSortUpdated('desc')" mat-menu-item>desc</button>
-                <button (click)="onSortUpdated('asc')" mat-menu-item>asc</button>
-            </mat-menu>
+    <div class="flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <div>
+                <button mat-button [matMenuTriggerFor]="sortByMenu">
+                    Sort by {{sort}}
+                    <mat-icon>expand_more</mat-icon>
+                </button>
+                <mat-menu #sortByMenu="matMenu">
+                    <button (click)="onSortUpdated('desc')" mat-menu-item>desc</button>
+                    <button (click)="onSortUpdated('asc')" mat-menu-item>asc</button>
+                </mat-menu>
+            </div>
+            <div>
+                <button mat-button [matMenuTriggerFor]="categoriesMenu">
+                    Sort by {{category}}
+                    <mat-icon>expand_more</mat-icon>
+                </button>
+                <mat-menu #categoriesMenu="matMenu">
+                    <button (click)="onCategoryUpdated('')" mat-menu-item>
+                        all
+                    </button>
+                    <button *ngFor="let  category of categories" (click)="onCategoryUpdated(category)" mat-menu-item>
+                        {{category}}
+                    </button>
+                </mat-menu>
+            </div>
+            <div>
+                <button mat-button [matMenuTriggerFor]="pricesMenu">
+                    Sort by {{price}}
+                    <mat-icon>expand_more</mat-icon>
+                </button>
+                <mat-menu #pricesMenu="matMenu">
+                    <button  (click)="onPriceRangeUpdated({ label: 'all', min: 0, max: infinityValue })" mat-menu-item>
+                        all
+                    </button>
+                    <button *ngFor="let price of prices" (click)="onPriceRangeUpdated(price)" mat-menu-item>
+                        {{price.label}}
+                    </button>
+                </mat-menu>
+            </div>
         </div>
         <div class="flex items-center pr-2">
             <div>

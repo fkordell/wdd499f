@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ProductsHeaderComponent } from "./components/products-header/products-header.component";
-import { FiltersComponent } from './components/filters/filters.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ProductBoxComponent} from './components/product-box/product-box.component'
 import { CartService } from '../../services/cart.service';
@@ -16,7 +15,7 @@ const ROWS_HEIGHT: { [id: number]: number } = {1: 400, 3: 335, 4: 350}
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MatSidenavModule, ProductsHeaderComponent, FiltersComponent, MatGridListModule, ProductBoxComponent, CommonModule, MatIconModule],
+  imports: [MatSidenavModule, ProductsHeaderComponent, MatGridListModule, ProductBoxComponent, CommonModule, MatIconModule],
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit, OnDestroy{
@@ -52,6 +51,14 @@ export class HomeComponent implements OnInit, OnDestroy{
       ? product.price >= this.priceRange.min && product.price <= this.priceRange.max : true;
       return inCategory && inPriceRange;
     })
+    ?.sort((a, b) => {
+      if (this.sort === 'desc') {
+        return b.price - a.price;
+      } else if (this.sort === 'asc') {
+        return a.price - b.price
+      }
+      return 0;
+    })
     console.log('Filtered products:', this.filteredProducts)
   }
 
@@ -65,13 +72,16 @@ export class HomeComponent implements OnInit, OnDestroy{
   }
 
   onShowCategory(newCategory: string): void {
-    this.category = newCategory;
+    this.category = newCategory || undefined;
     this.getProducts();
   }
 
   onShowPriceRange(priceRange: { min: number; max: number }): void {
-    this.priceRange = priceRange;
-    console.log('Applying price filter:', this.priceRange)
+    if (priceRange.min === 0 && priceRange.max === Infinity) {
+      this.priceRange = undefined;
+    } else {
+      this.priceRange = priceRange;
+    }
     this.applyFilters();
   }
 

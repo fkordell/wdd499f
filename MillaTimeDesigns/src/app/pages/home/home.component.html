@@ -1,32 +1,22 @@
-<button class="pl-2" mat-icon-button (click)="toggleFilter()">
-    <mat-icon *ngIf="!isFilterOpen">filter_alt</mat-icon>
-    <mat-icon *ngIf="isFilterOpen">close</mat-icon>
-</button>
-
 <mat-drawer-container class="min-h-full max-w-full mx-auto border-x" autosize>
-
-    <mat-drawer mode="side" [opened]="isFilterOpen" class="p-6">
-        <app-filters 
-            (showCategory)="onShowCategory($event)"
-            (showPriceRange)="onShowPriceRange($event)">
-        </app-filters>
-    </mat-drawer>
-
     <mat-drawer-content class="p-6">
-        <app-products-header 
-            (columnsCountChange)="onColumnsCountChange($event)" 
-            (itemsCountChange)="onItemsCountChange($event)" 
-            (sortChange)="onSortChange($event)">
-        </app-products-header>
-        <mat-grid-list gutterSize="16" [cols]="cols" [rowHeight]="rowHeight">
-            <mat-grid-tile *ngFor="let product of filteredProducts">
-                <app-product-box
-                    [product]="product"
-                    (addToCart)="onAddToCart($event)"
-                    class="w-full"
-                    [fullWidthMode]="cols === 1">
-                </app-product-box>
-            </mat-grid-tile>
-        </mat-grid-list>
+      <app-products-header
+        (columnsCountChange)="onColumnsCountChange($event)"
+        (itemsCountChange)="onItemsCountChange($event)"
+        (sortChange)="onSortChange($event)"
+        (categoryChange)="onShowCategory($event)"
+        (priceRangeChange)="onShowPriceRange($event)">
+      </app-products-header>
+      <mat-grid-list gutterSize="16" [cols]="cols" [rowHeight]="rowHeight">
+        <mat-grid-tile *ngFor="let product of filteredProducts">
+          <app-product-box
+            [product]="product"
+            (addToCart)="onAddToCart($event)"
+            class="w-full"
+            [fullWidthMode]="cols === 1">
+          </app-product-box>
+        </mat-grid-tile>
+      </mat-grid-list>
     </mat-drawer-content>
-</mat-drawer-container>
+  </mat-drawer-container>
+  
