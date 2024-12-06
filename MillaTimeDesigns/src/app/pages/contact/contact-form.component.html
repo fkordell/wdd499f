@@ -61,7 +61,7 @@
           <mat-error *ngIf="message?.invalid && message?.touched">Message is required.</mat-error>
         </mat-form-field>
   
-        <button mat-raised-button color="primary" type="submit" class="w-full" [disabled]="contactForm.invalid">
+        <button mat-raised-button type="submit" class="w-full" [disabled]="contactForm.invalid" [ngClass]="{'bg-gray-400': contactForm.invalid, 'bg-blue-500 text-white hover:bg-blue-700': !contactForm.invalid}">
           Send Message
         </button>
       </form>

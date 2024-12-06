@@ -6,15 +6,17 @@ import { CartService } from './services/cart.service';
 import { StoreService } from './services/store.service';
 import { Cart } from './models/cart.model';
 import { AppAuthService } from './services/auth.service';
+import { FooterComponent } from "./components/footer/footer.component";
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, MatSnackBarModule],
+  imports: [RouterOutlet, HeaderComponent, MatSnackBarModule, FooterComponent],
   template: `
   <app-header [cart]="cart"></app-header>
   <router-outlet></router-outlet>
+  <app-footer></app-footer>
   `,
   styles: [],
 })

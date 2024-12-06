@@ -1,68 +1,109 @@
 <div class="w-full max-w-full mx-auto">
+  <!-- Hero -->
   <section class="parallax-bg relative h-screen flex flex-col items-center justify-center text-center p-4 overflow-hidden">
     <video autoplay muted loop playsinline class="absolute top-0 left-0 w-full h-full object-cover z-[-1]">
       <source src="../../../assets/videos/background.mp4" type="video/mp4">
       Your browser does not support HTML5 video.
     </video>
-    <div class="relative z-[1]">
+    <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-black/60 z-[-1]"></div>
+    <div class="relative z-[1] animate-fade-in">
       <h1 class="text-7xl !important font-bold text-white">Discover the Finest Products</h1>
       <p class="text-xl mb-6 text-white">Shop our collection for exclusive and high-quality items.</p>
-      <button mat-raised-button color="accent" routerLink="/shop" class="px-8 py-4 text-lg">
+      <button mat-raised-button routerLink="/shop" class="rounded-full bg-blue-500 text-white hover:bg-blue-700 px-8 py-2 text-lg">
         Shop Now
       </button>
     </div>
   </section>
-    <div class="p-8 bg-gray-100">
-      <h2 class="text-3xl font-bold text-center mb-8">Featured Products</h2>
-      <div 
-        [ngClass]="{
-          'grid grid-cols-1 gap-8': true,
-          'md:grid-cols-2': gridCols === 4,
-          'lg:grid-cols-3': gridCols === 3
-        }">
-        <mat-card *ngFor="let product of featuredProducts" class="rounded-lg shadow-lg overflow-hidden">
-          <img mat-card-image [src]="product.image" [alt]="product.title" class="object-contain p-4 h-48 w-full">
-          <mat-card-content>
-            <h3 class="text-xl font-semibold mt-4">{{ product.title }}</h3>
-            <p class="text-gray-700 mt-2">{{ product.description | slice:0:50 }}...</p>
-            <p class="text-lg font-bold mt-4">{{ product.price | currency }}</p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button class="p-2" (click)="onAddToCart(product)">
-              <mat-icon class="text-gray-500">shopping_cart</mat-icon>
+  <!-- Featured Products -->
+  <div class="p-16 bg-gray-50">
+    <h2 class="text-4xl font-extrabold text-center text-gray-800 mb-12">Featured Products</h2>
+    <div 
+      [ngClass]="{
+        'grid grid-cols-1 gap-12': true,
+        'md:grid-cols-2': gridCols === 4,
+        'lg:grid-cols-3': gridCols === 3
+      }">
+      <mat-card *ngFor="let product of featuredProducts" class="rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
+        <img mat-card-image [src]="product.image" [alt]="product.title" class="object-contain p-4 h-48 w-full">
+        <mat-card-content class="text-center">
+          <h3 class="text-2xl font-semibold mt-4 text-gray-800">{{ product.title }}</h3>
+          <p class="text-gray-600 mt-2">{{ product.description | slice:0:50 }}...</p>
+          <p class="text-xl font-bold mt-4">{{ product.price | currency }}</p>
+        </mat-card-content>
+        <mat-card-actions class="justify-center">
+          <button (click)="onAddToCart(product)" class="px-8 py-2 rounded-full bg-blue-500 text-white shadow hover:bg-blue-600 transition">
+            Add To Cart
           </button>
-          </mat-card-actions>
-        </mat-card>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+  <!-- Newsletter -->
+  <div class="parallax-bg-secondary py-20 flex items-center justify-center">
+    <div class="p-10 bg-white flex flex-col items-center text-center max-w-2xl rounded-md shadow-lg">
+      <h2 class="text-4xl font-bold mb-6 text-gray-800">Join Our Newsletter!</h2>
+      <p class="text-lg text-gray-600 mb-6">Get discounts and other promotional items when you join our quarterly newsletter.</p>
+      <form [formGroup]="emailForm" (ngSubmit)="onSubmit()" class="w-full space-y-6">
+        <mat-form-field class="w-full">
+          <mat-label class="pr-4">Email</mat-label>
+          <input class="rounded-md" matInput placeholder="Enter your email" formControlName="email">
+          <mat-error *ngIf="emailForm.get('email')?.invalid && emailForm.get('email')?.touched">
+            Please enter a valid email.
+          </mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="emailForm.invalid" class="px-8 py-2 rounded-full shadow transition" [ngClass]="{'bg-gray-400 cursor-not-allowed': emailForm.invalid, 'bg-blue-500 text-white hover:bg-blue-700': !emailForm.invalid}">
+          Join Now
+        </button>
+      </form>
+    </div>
+  </div>
+  <!-- Testimonials -->
+  <div class="p-16 bg-gray-50">
+    <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Customer Testimonials</h2>
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <mat-card *ngFor="let testimonial of displayedTestimonials" class="rounded-lg shadow-md bg-gray-100 p-6 hover:shadow-lg transition">
+        <mat-card-content>
+          <p class="text-gray-600 italic">"{{ testimonial.message }}"</p>
+          <div class="flex justify-center items-center mt-4">
+            <span *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
+              <mat-icon class="text-yellow-500" *ngIf="i < testimonial.rating">star</mat-icon>
+              <mat-icon class="text-gray-400" *ngIf="i >= testimonial.rating">star_outline</mat-icon>
+            </span>
+          </div>
+          <p class="text-right mt-4 font-semibold text-gray-800">- {{ testimonial.name }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="text-center mt-8">
+      <button
+        class="px-8 py-2 text-lg bg-blue-500 text-white rounded-full hover:bg-blue-600 transition"
+        (click)="loadMoreTestimonials()"
+        *ngIf="displayedTestimonials.length < testimonials.length"
+      >
+        See More
+      </button>
+    </div>
+  </div>
+  <!-- Why Us -->
+  <div class="parallax-bg-secondary py-20">
+    <h2 class="text-4xl font-bold text-center mb-12">Why Choose Millatime Designs?</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mx-16">
+      <div class="bg-gray-100 p-10 rounded-lg shadow-lg hover:shadow-xl transition text-center">
+        <mat-icon class="text-6xl text-blue-500 mb-4">precision_manufacturing</mat-icon>
+        <h3 class="text-2xl font-semibold text-gray-800">Precision Craftsmanship</h3>
+        <p class="text-gray-600 mt-4">Our products are made with the utmost attention to detail and care.</p>
+      </div>
+      <div class="bg-gray-100 p-10 rounded-lg shadow-lg hover:shadow-xl transition text-center">
+        <mat-icon class="text-6xl text-green-500 mb-4">eco</mat-icon>
+        <h3 class="text-2xl font-semibold text-gray-800">Sustainable Materials</h3>
+        <p class="text-gray-600 mt-4">We prioritize eco-friendly practices in every step of our process.</p>
+      </div>
+      <div class="bg-gray-100 p-10 rounded-lg shadow-lg hover:shadow-xl transition text-center">
+        <mat-icon class="text-6xl text-yellow-500 mb-4">support_agent</mat-icon>
+        <h3 class="text-2xl font-semibold text-gray-800">Exceptional Support</h3>
+        <p class="text-gray-600 mt-4">We’re here to help with custom orders, inquiries, and more.</p>
       </div>
     </div>
-      <div class="parallax-bg-secondary h-80 flex items-center justify-center">
-        <div class="p-8 bg-white flex flex-col items-center text-center w-3/4 rounded-md">
-          <h2 class="text-3xl font-bold mb-4">Join Our Newsletter!</h2>
-          <p>Get discounts and other promotional items when you join our quarterly newsletter.</p>
-          <form [formGroup]="emailForm" (ngSubmit)="onSubmit()" class="w-full max-w-sm space-y-4">
-            <mat-form-field class="w-full">
-              <mat-label class="pr-4">Email</mat-label>
-              <input class="rounded-md" matInput placeholder="Enter your email" formControlName="email">
-              <mat-error *ngIf="emailForm.get('email')?.invalid && emailForm.get('email')?.touched">
-                Please enter a valid email.
-              </mat-error>
-            </mat-form-field>
-            <button mat-raised-button color="primary" type="submit" [disabled]="emailForm.invalid">
-              Join Now
-            </button>
-          </form>
-        </div>
-      </div>
-    <!-- <div class="p-8 bg-white">
-      <h2 class="text-3xl font-bold text-center mb-8">Customer Testimonials</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <mat-card *ngFor="let testimonial of testimonials" class="rounded-lg shadow-lg">
-          <mat-card-content>
-            <p class="text-gray-700 italic">"{{ testimonial.message }}"</p>
-            <p class="text-sm text-right mt-4 font-semibold">- {{ testimonial.name }}</p>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </div> -->
   </div>
+</div>
   
