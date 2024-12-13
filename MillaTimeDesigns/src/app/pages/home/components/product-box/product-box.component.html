@@ -1,17 +1,30 @@
-<mat-card *ngIf="product" [ngClass]="{'text-center': !fullWidthMode}" class="hover:scale-95 transform-origin-center transition-transform duration-300 cursor-pointer" (click)="openProductModal()">
-  <div [ngClass]="{flex: fullWidthMode}">
-    <img class="mb-1 mx-auto h-[200px] p-2" [ngClass]="{ 'h-[200px]': !fullWidthMode, 'h-[360px]': fullWidthMode }" [src]="product.image"/>
-    <div class="w-full" [ngClass]="{'px-8 flex flex-col justify-between': fullWidthMode}">
-      <div>
-        <h5 class="!text-lg !font-bold">{{ product.category.toUpperCase() }}</h5>
-        <p class="truncate p-2">{{ product.title }}</p>
-      </div>
-      <div class="flex justify-between">
-        <span class="text-red-400 p-2">{{ product.price | currency }}</span>
-        <button class="p-2" (click)="onAddToCart(); $event.stopPropagation()">
-          <mat-icon class="text-gray-500">shopping_cart</mat-icon>
-        </button>
-      </div>
+<mat-card 
+  *ngIf="product" 
+  [ngClass]="{
+    'text-center': !fullWidthMode, 
+    'flex flex-col lg:flex-row': fullWidthMode
+  }" 
+  class="hover:scale-95 transform-origin-center transition-transform duration-300 cursor-pointer overflow-hidden max-w-full"
+  (click)="openProductModal()"
+>
+  <img 
+    [src]="product.image" 
+    alt="{{ product.title }}" 
+    class="mb-4 mt-4 mx-auto h-[150px] md:h-[200px] lg:h-[250px] xl:h-[300px] object-contain lg:mb-0 flex-shrink-0 w-full lg:w-[40%]"
+  />
+  <div class="flex flex-col justify-between w-full space-y-2 p-4 lg:w-[100%]">
+    <div>
+      <h3 class="text-lg font-bold text-gray-800 truncate">{{ product.title.toUpperCase() }}</h3>
+      <p class="text-sm md:text-base text-gray-600 mt-2 line-clamp-2">{{ product.description }}</p>
+    </div>
+    <div class="flex justify-between items-center mt-4">
+      <span class="font-bold text-blue-600 text-base md:text-lg">{{ product.price | currency }}</span>
+      <button 
+        class="px-8 py-2 rounded-full bg-blue-500 text-white hover:bg-blue-700 focus:outline-none"
+        (click)="onAddToCart(); $event.stopPropagation()"
+      >
+      Add To Cart
+      </button>
     </div>
   </div>
 </mat-card>

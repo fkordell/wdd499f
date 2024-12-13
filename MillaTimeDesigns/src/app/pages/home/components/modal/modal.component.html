@@ -3,13 +3,13 @@
       <mat-icon>close</mat-icon>
     </button>
     <mat-dialog-content class="flex flex-col items-center space-y-4 p-6">
-      <img *ngIf="data.image" [src]="data.image"[alt]="data.title" class="w-full max-w-xs rounded-lg shadow-md"/>
+      <img *ngIf="data.image" [src]="data.image"[alt]="data.title" class="w-1/4 max-w-xs rounded-lg shadow-md"/>
       <h2 *ngIf="data.title" class="text-2xl font-bold">{{ data.title }}</h2>
       <p *ngIf="data.description" class="text-lg text-gray-600">{{ data.description }}</p>
       <div *ngIf="data.price" class="flex items-center justify-between w-full">
-        <p class="text-xl font-semibold text-red-500">{{ data.price | currency }}</p>
-        <button mat-raised-button color="accent" class="ml-4" (click)="addToCart()">
-          <mat-icon>shopping_cart</mat-icon>
+        <p class="text-xl font-semibold text-blue-500">{{ data.price | currency }}</p>
+        <button mat-raised-button color="accent" class="px-8 py-2 rounded-full bg-blue-500 text-white hover:bg-blue-700" (click)="addToCart()">
+          Add To Cart
         </button>
       </div>
     </mat-dialog-content>

@@ -7,16 +7,23 @@
         (categoryChange)="onShowCategory($event)"
         (priceRangeChange)="onShowPriceRange($event)">
       </app-products-header>
-      <mat-grid-list gutterSize="16" [cols]="cols" [rowHeight]="rowHeight">
-        <mat-grid-tile *ngFor="let product of filteredProducts">
-          <app-product-box
-            [product]="product"
-            (addToCart)="onAddToCart($event)"
-            class="w-full"
+      <mat-grid-list 
+        gutterSize="12" 
+        [cols]="cols" 
+        [rowHeight]="rowHeight" 
+        class="w-full max-w-full">
+        <mat-grid-tile *ngFor="let product of displayedProducts">
+          <app-product-box 
+            [product]="product" 
+            (addToCart)="onAddToCart($event)" 
+            class="w-full" 
             [fullWidthMode]="cols === 1">
           </app-product-box>
         </mat-grid-tile>
       </mat-grid-list>
+      <div class="flex justify-center mt-6" *ngIf="displayedProducts.length < (filteredProducts?.length || 0)">
+        <button mat-raised-button color="primary" (click)="loadMoreProducts()">Load More</button>
+      </div>
     </mat-drawer-content>
   </mat-drawer-container>
   
